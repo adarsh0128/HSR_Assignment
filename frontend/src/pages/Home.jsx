@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { BASE_URL } from "../utils/constants";
 
 axios.defaults.withCredentials = true;
 
@@ -29,7 +30,7 @@ const HomePage = () => {
   const fetchTasks = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("http://localhost:5000/tasks", {
+      const res = await axios.get(`${BASE_URL}/tasks`, {
         params: { page, limit: 5 },
       });
       let filteredTasks = res.data.task || [];
@@ -54,7 +55,7 @@ const HomePage = () => {
 
   const handleDelete = async (taskId) => {
     try {
-      await axios.delete(`http://localhost:5000/tasks/${taskId}`);
+      await axios.delete(`${BASE_URL}/tasks/${taskId}`);
       fetchTasks();
     } catch (err) {
       console.error("Failed to delete task:", err.message);
@@ -75,7 +76,7 @@ const HomePage = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.post("http://localhost:5000/logout");
+      await axios.post(`${BASE_URL}/logout`);
       navigate("/");
     } catch (err) {
       console.error("Logout failed:", err.message);
@@ -93,9 +94,9 @@ const HomePage = () => {
 
       let res;
       if (isEditing) {
-        res = await axios.put(`http://localhost:5000/tasks/${editId}`, payload);
+        res = await axios.put(`${BASE_URL}/tasks/${editId}`, payload);
       } else {
-        res = await axios.post("http://localhost:5000/tasks", payload);
+        res = await axios.post(`${BASE_URL}/tasks`, payload);
       }
 
       if (res.status === 200 || res.status === 201) {
