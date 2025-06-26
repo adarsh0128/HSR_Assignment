@@ -3,6 +3,7 @@ const User = require("../models/user.js");
 const bcrypt = require("bcrypt");
 
 const authRouter = express.Router();
+const authMiddleware = require("../middlewares/auth.js");
 
 // signup
 
@@ -75,6 +76,9 @@ authRouter.post("/logout", async (req, res) => {
     sameSite: "None",
   });
   res.json("Logout Success !!");
+});
+authRouter.get("/isLoggedIn", authMiddleware, (req, res) => {
+  res.status(200).json({ success: true, user: req.user });
 });
 
 module.exports = authRouter;

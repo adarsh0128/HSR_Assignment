@@ -8,13 +8,15 @@ const taskRouter = express.Router();
 taskRouter.post("/", authMiddleware, async (req, res) => {
   try {
     const { title, description, dueDate, completed } = req.body;
-    const [day, month, year] = dueDate.split("/");
-    const formattedDueDate = new Date(`${year}-${month}-${day}`);
+
+    if (!title || !description || !dueDate) {
+      return res.status(400).json({ error: "All fields are required" });
+    }
 
     const task = new Task({
       title,
       description,
-      dueDate: formattedDueDate,
+      dueDate: new Date(dueDate), // Now accepts ISO format
       completed,
       user: req.user._id,
     });
